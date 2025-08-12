@@ -1,0 +1,169 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// merchant
+model Merchant {
+  id          String    @id @default(uuid())
+  name        String
+  email       String
+  phone       String
+  business_id String
+  live_mode   Boolean
+  api_key     ApiKey[]
+  payments    Payment[]
+  webhooks    Webhook[]
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+}
+
+// api key
+model ApiKey {
+  id         String   @id @default(uuid())
+  name       String
+  live_mode  Boolean
+  merchantId String
+  Merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+// payment
+model Payment {
+  id             String        @id @default(uuid())
+  merchant_id    String
+  merchant       Merchant      @relation(fields: [merchant_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  currency       currency
+  metadata       Json
+  client_secret  String
+  payment_id     String
+  payment_link   String
+  customer_id    String
+  customer       Customer      @relation(fields: [customer_id], references: [id])
+  payment_method PaymentMethod
+  refund         Refund[]
+  total_amount   Int
+  status         Status        @default(PENDING)
+  failure_reason String?
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
+
+  @@index([merchant_id])
+  @@index([customer_id])
+  @@index([status])
+}
+
+enum PaymentMethod {
+  CARD
+  UPI
+  WALLET
+  BANK_TRANSFER
+  PAYPAL
+  GOOGLE_PAY
+  APPLE_PAY
+}
+
+model Customer {
+  id         String    @id @default(uuid())
+  name       String
+  email      String
+  phone      String
+  payments   Payment[]
+  updated_at DateTime  @updatedAt
+  created_at DateTime  @default(now())
+}
+
+model Refund {
+  id         String   @id @default(uuid())
+  payment_id String
+  payment    Payment  @relation(fields: [payment_id], references: [id])
+  amount     Int
+  status     Status   @default(PENDING)
+  reason     String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum currency {
+  INR
+  USD
+  EUR
+  GBP
+  CAD
+  AUD
+  NZD
+  CHF
+  HKD
+  SGD
+
+  // Todo: Add more currencies
+}
+
+enum Status {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+// webhooks
+
+model Webhook {
+  id                 String            @id @default(uuid())
+  name               String
+  url                String
+  events             String[] // ["payment.success", "refund.initiated"]
+  secret             String // Used to sign webhook payload for security
+  status             WebhookStatus     @default(ACTIVE)
+  merchant_id        String
+  merchant           Merchant          @relation(fields: [merchant_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  webhook_deliveries WebhookDelivery[]
+  failure_reason     String?
+  failure_count      Int?              @default(0)
+  last_delivered_at  DateTime?
+  created_at         DateTime          @default(now())
+  updated_at         DateTime          @updatedAt
+}
+
+enum WebhookStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model WebhookDelivery {
+  id               String         @id @default(uuid())
+  webhook_id       String
+  description      String?
+  webhook          Webhook        @relation(fields: [webhook_id], references: [id], onDelete: Cascade)
+  event_type       String // e.g. "payment.success"
+  payload          Json // Actual data sent
+  response_code    Int?
+  response_body    String?
+  response_headers Json?
+  status           deliveryStatus @default(PENDING)
+  attempts         Int            @default(0)
+  next_attempt     DateTime?
+  last_attempt     DateTime?
+  created_at       DateTime       @default(now())
+
+  @@index([status])
+}
+
+enum deliveryStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  RETRY
+  TIMEOUT
+}
