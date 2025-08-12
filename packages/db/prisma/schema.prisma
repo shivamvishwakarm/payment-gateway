@@ -16,17 +16,17 @@ datasource db {
 
 // merchant
 model Merchant {
-  id          String    @id @default(uuid())
-  name        String
-  email       String
-  phone       String
-  business_id String
-  live_mode   Boolean
-  api_key     ApiKey[]
-  payments    Payment[]
-  webhooks    Webhook[]
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt
+  id         String    @id @default(uuid())
+  name       String
+  email      String    @unique
+  phone      String
+  password   String
+  live_mode  Boolean   @default(false)
+  api_key    ApiKey[]
+  payments   Payment[]
+  webhooks   Webhook[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
 }
 
 // api key
