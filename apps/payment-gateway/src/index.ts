@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
-import prisma from "@payment_gateway/db"
+import authRouter from "./routes/api/auth.routes";
+import apiKeyRouter from "./routes/api/apikey.routes";
+import paymentRouter from "./routes/api/payment.routes";
+import 'dotenv/config'
+import express = require('express');
 
 
-const express = require('express');
-const app = express();
+var app = express();
 const port = 3000;
 
 // Middleware: JSON parser
@@ -16,6 +19,11 @@ app.use((req: Request, res: Response, next: Function) => {
     next();
 });
 
+
+app.use("/auth", authRouter);
+app.use("/api-keys", apiKeyRouter);
+app.use("/payments", paymentRouter);
+
 /**
  * Root endpoint - Health check
  */
@@ -23,91 +31,7 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Payment Gateway API is running.');
 });
 
-/**
- * GET /api_keys
- * Step-by-step:
- * 1. Check if the user is authenticated.
- * 2. Extract `business_id`, `name`, and `live_mode` from request body.
- * 3. Validate the request data.
- * 4. Fetch API key details from the database.
- * 5. Return in the format:
- *    {
- *      api_key: "<string>",
- *      api_key_id: "<string>",
- *      business_id: "<string>",
- *      created_at: "<ISO Date>",
- *      expires_at: "<ISO Date>",
- *      live_mode: <boolean>,
- *      name: "<string>"
- *    }
- */
-app.get('/api_keys', (req: Request, res: Response) => {
-    const { business_id, name, live_mode } = req.body;
 
-    // TODO: 1. Validate inputs
-    // TODO: 2. Fetch API key from DB
-    // TODO: 3. Return formatted response
-
-    res.json({
-        api_key: "QC0WKnLP",
-        api_key_id: "QC0WKnLPmTowo_5V",
-        business_id: business_id || "bus_iaFGunRnnm6iZ1b9Ax3MO",
-        created_at: new Date().toISOString(),
-        expires_at: new Date(new Date().setFullYear(new Date().getFullYear() + 10)).toISOString(),
-        live_mode: live_mode ?? false,
-        name: name || "test2"
-    });
-});
-
-
-
-app.post('/signup', async (req: Request, res: Response) => {
-    const { email, password, name, phone, business_id } = req.body;
-    console.log(req.body);
-
-    // TODO: 1. Validate inputs
-    // TODO: 2. Create a new merchant
-    // TODO: 3. Return formatted response
-
-    const merchant = await prisma.merchant.create({
-        data: {
-            email,
-            name,
-            password,
-            phone,
-            live_mode: false,
-        },
-    })
-
-    console.log(merchant);
-
-    res.send({
-        status: "success",
-    })
-
-});
-
-/**
- * POST /login
- * Step-by-step:
- * 1. Get `email` and `password` from request body.
- * 2. Validate credentials against database.
- * 3. Generate & return authentication token.
- */
-app.post('/login', async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-    const merchant = await prisma.merchant.findFirst({
-        where: {
-            email: email
-        }
-    });
-
-    // TODO: 1. Validate credentials from DB
-    // TODO: 2. Generate JWT token
-    // TODO: 3. Return token in response
-
-    res.json({ token: "sample-auth-token" });
-});
 
 /**
  * POST /payments
