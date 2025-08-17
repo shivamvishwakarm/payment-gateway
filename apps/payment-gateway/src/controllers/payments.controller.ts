@@ -1,18 +1,21 @@
 
 import * as paymentService from "../services/payments.services";
-import { logger } from "../utils/logger";
+
+
 export const createPayment = async (req: any, res: any) => {
     try {
+        console.log('body', req.body)
         const payment = await paymentService.createPayment(req.body);
-        res.status(201).json({ success: true, payment });
+
+        const payment_link = "https://dummy.pay.example.com";
+
+        res.status(201).json({ data: "dummy response" })
 
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
         res.status(400).json({ success: false, message: error.message });
-        return;
     }
-
-}
+};
 export const getPayment = async (req: any, res: any) => {
     try {
         const payment = await paymentService.getPayment(req.params.id);
@@ -43,3 +46,4 @@ export const deletePayment = async (req: any, res: any) => {
         return;
     }
 }
+

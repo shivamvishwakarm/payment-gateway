@@ -5,7 +5,7 @@ import * as apiService from "../services/apikey.services";
 export const get_api_keys = async (req: any, res: any) => {
 
     try {
-        const apiKey = await apiService.getApiKeys(req.body)
+        const apiKey = await apiService.createApiKey(req.body)
         return res.status(200).json({ success: true, apiKey });
     } catch (error: any) {
         res.status(400).json({ success: false, message: error.message });

@@ -3,74 +3,31 @@ import { logger } from "../utils/logger";
 
 
 export const createPayment = async (data: any) => {
-    const {
-        merchant_id,
-        currency,
-        metadata,
-        client_secret,
-        payment_id,
-        payment_link,
-        total_amount,
-        payment_method,
-        status,          // optional
-        failure_reason,  // optional
 
-        // 👇 Customer info passed directly (instead of customer_id)
-        customer_name,
-        customer_email,
-        customer_phone
-    } = data;
 
-    // ✅ Validate required fields
-    if (
-        !merchant_id ||
-        !currency ||
-        !metadata ||
-        !client_secret ||
-        !payment_id ||
-        !payment_link ||
-        !total_amount ||
-        !payment_method ||
-        !customer_name ||
-        !customer_email ||
-        !customer_phone
-    ) {
-        throw new Error("Missing required fields for payment or customer.");
-    }
 
-    try {
-        // 👇 Step 1: Create customer
-        const customer = await Prisma.customer.create({
-            data: {
-                name: customer_name,
-                email: customer_email,
-                phone: customer_phone
-            }
-        });
 
-        // 👇 Step 2: Create payment with created customer's ID
-        const payment = await Prisma.payment.create({
-            data: {
-                merchant_id,
-                customer_id: customer.id,
-                currency,
-                metadata,
-                client_secret,
-                payment_id,
-                payment_link,
-                total_amount,
-                payment_method,
-                status,         // optional
-                failure_reason  // optional
-            }
-        });
-
-        return payment;
-    } catch (error) {
-        console.error("Failed to create payment:", error);
-        throw error;
-    }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export const getPayment = async (id: string) => {
 
