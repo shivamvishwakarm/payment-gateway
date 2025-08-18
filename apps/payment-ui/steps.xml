@@ -1,0 +1,50 @@
+<automation>
+    <step
+        id="1"
+        status="completed"
+        personaList="str_replace_editor">
+        Create website folder structure for payment gateway
+    </step>
+    <step
+        id="2"
+        status="completed"
+        personaList="str_replace_editor, developer">
+        Build HTML structure with payment form fields (card number, expiry, CVV, amount, etc.)
+    </step>
+    <step
+        id="3"
+        status="completed"
+        personaList="developer">
+        Style the payment form with Tailwind CSS to look professional like Razorpay
+    </step>
+    <step
+        id="4"
+        status="completed"
+        personaList="developer">
+        Add JavaScript for form validation, card number formatting, and user interactions
+    </step>
+    <step
+        id="5"
+        status="completed"
+        personaList="developer">
+        Integrate window.form API for payment form submission
+    </step>
+    <step
+        id="6"
+        status="completed"
+        personaList="bash">
+        Serve the website locally for testing
+    </step>
+    <step
+        id="7"
+        status="completed"
+        personaList="browser_user">
+        Test the payment gateway UI functionality
+    </step>
+    <step
+        id="8"
+        status="completed"
+        personaList="str_replace_editor">
+        Deploy the website and provide the URL
+    </step>
+</automation>

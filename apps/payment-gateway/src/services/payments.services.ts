@@ -2,7 +2,7 @@ import Prisma from "@payment_gateway/db";
 import { nanoid } from "nanoid"; // for secure ID generation
 
 // You might store this in an env variable
-const BASE_PAYMENT_URL = process.env.BASE_PAYMENT_URL || "https://yourdomain.com/pay";
+const BASE_PAYMENT_URL = process.env.BASE_PAYMENT_URL || "http://127.0.0.1:5500/apps/payment-ui/index.html";
 
 export const createPayment = async (data: any) => {
     console.log("data", data);
@@ -99,7 +99,7 @@ export const createPayment = async (data: any) => {
         return {
             success: true,
             paymentId: payment.id,
-            paymentLink,
+            BASE_PAYMENT_URL, // Todo: change to actual link
             clientSecret,
         };
     } catch (error) {
