@@ -29,8 +29,6 @@ export const authenticateApiKey = async (req: Request, res: Response, next: Next
         return res.status(401).json({ error: 'Missing API key' });
     }
 
-    console.log("apiKey", apiKey);
-
     const merchant_id = apiKey.toString().split("_")[1];
 
     const apiKeyRecord = await prisma.apiKey.findFirst({ where: { merchantId: merchant_id } })
@@ -39,10 +37,13 @@ export const authenticateApiKey = async (req: Request, res: Response, next: Next
         return res.status(401).json({ error: 'Unauthorized: Invalid API key' });
     }
 
-    const isValid = await bcrypt.compareSync(apiKey, apiKeyRecord.key_hash);
+    const isValid = bcrypt.compareSync(apiKey, apiKeyRecord.key_hash);
 
     console.log("isValid", isValid);
-    if (isValid) { next() }
+    if (!isValid) {
+        res.status(401).json({ error: 'unauthorized' });
+    }
 
-    res.status(401).json({ error: 'unauthorized' });
+    next();
+
 };

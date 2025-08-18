@@ -17,10 +17,12 @@
     "@types/express": "^5.0.3",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "express-rate-limit": "^8.0.1",
     "jsonwebtoken": "^9.0.2",
+    "nanoid": "^5.1.5",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "winston": "^3.17.0"
@@ -28,6 +30,7 @@
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
     "@types/jsonwebtoken": "^9.0.10"
   }
 }

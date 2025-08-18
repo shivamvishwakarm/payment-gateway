@@ -26,6 +26,7 @@ model Merchant {
   webhooks   Webhook[]
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
+  Order      Order[]
 }
 
 // api key
@@ -42,27 +43,39 @@ model ApiKey {
 
 // payment
 model Payment {
-  id             String        @id @default(uuid())
-  merchant_id    String
-  merchant       Merchant      @relation(fields: [merchant_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  currency       currency
-  metadata       Json
-  client_secret  String
-  payment_id     String
-  payment_link   String
-  customer_id    String
-  customer       Customer      @relation(fields: [customer_id], references: [id])
-  payment_method PaymentMethod
-  refund         Refund[]
-  total_amount   Int
-  status         Status        @default(PENDING)
-  failure_reason String?
-  created_at     DateTime      @default(now())
-  updated_at     DateTime      @updatedAt
+  id            String        @id @default(uuid())
+  merchantId    String
+  // customerId    String
+  orderId       String?
+  currency      Currency
+  clientSecret  String
+  paymentId     String?
+  paymentLink   String?
+  paymentMethod PaymentMethod
+  totalAmount   Int
+  status        PaymentStatus @default(PENDING)
+  failureReason String?
+  metadata      Json?
+  merchant      Merchant      @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  // customer      Customer      @relation(fields: [customerId], references: [id])
+  order         Order?        @relation(fields: [orderId], references: [id])
+  refunds       Refund[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  Customer      Customer?     @relation(fields: [customerId], references: [id])
+  customerId    String?
 
-  @@index([merchant_id])
-  @@index([customer_id])
+  @@index([merchantId])
+  // @@index([customerId])
   @@index([status])
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
 }
 
 enum PaymentMethod {
@@ -75,14 +88,43 @@ enum PaymentMethod {
   APPLE_PAY
 }
 
+model PaymentLink {
+  id        String   @id @default(uuid())
+  orderId   String
+  url       String
+  expiresAt DateTime
+  status    String // pending, paid, expired, failed
+  amount    Int
+  currency  String
+  metadata  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relations
+  order Order @relation(fields: [orderId], references: [id])
+}
+
+model Order {
+  id          String        @id @default(uuid())
+  merchantId  String
+  customerId  String
+  merchant    Merchant      @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  customer    Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  payments    Payment[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  PaymentLink PaymentLink[]
+}
+
 model Customer {
-  id         String    @id @default(uuid())
-  name       String
-  email      String
-  phone      String
-  payments   Payment[]
-  updated_at DateTime  @updatedAt
-  created_at DateTime  @default(now())
+  id        String    @id @default(uuid())
+  name      String
+  email     String
+  phone     String
+  orders    Order[]
+  payments  Payment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Refund {
@@ -96,7 +138,7 @@ model Refund {
   updated_at DateTime @updatedAt
 }
 
-enum currency {
+enum Currency {
   INR
   USD
   EUR

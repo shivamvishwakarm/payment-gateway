@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import { verifyAccessToken } from "./utils/jwt";
 import { logger } from "./utils/logger";
 import { authenticate } from "./middlewares/auth.middleware";
+import cors from "cors";
 
 
 var app = express();
@@ -17,7 +18,6 @@ const port = 3000;
 app.use(express.json());
 app.use(cookieParser())
 
-// Middleware: Authentication placeholder
 
 
 app.use("/auth", authRouter);
@@ -32,7 +32,6 @@ app.use("/payments", paymentRouter);  // Todo: add api-key middleware
 app.get('/', (req: Request, res: Response) => {
     res.send('Payment Gateway API is running.');
 });
-
 
 
 

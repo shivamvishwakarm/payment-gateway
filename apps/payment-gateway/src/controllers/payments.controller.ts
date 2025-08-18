@@ -4,12 +4,13 @@ import * as paymentService from "../services/payments.services";
 
 export const createPayment = async (req: any, res: any) => {
     try {
-        console.log('body', req.body)
+        console.log('body>>>', req.body)
+        // const payment = await paymentService.createPayment(req.body);
+
         const payment = await paymentService.createPayment(req.body);
 
-        const payment_link = "https://dummy.pay.example.com";
-
-        res.status(201).json({ data: "dummy response" })
+        console.log("payment", payment);
+        res.status(201).json({ data: payment })
 
     } catch (error: any) {
         console.error(error);
