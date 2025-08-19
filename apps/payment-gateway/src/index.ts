@@ -18,6 +18,15 @@ const port = 3000;
 app.use(express.json());
 app.use(cookieParser())
 
+app.use(cors());
+
+// cors domain whitelist
+
+app.use(cors({
+    origin: "http://127.0.0.1:5500",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+}));
 
 
 app.use("/auth", authRouter);

@@ -84,7 +84,7 @@ export const createPayment = async (data: any) => {
                         id: orderRecord.id,
                     },
                 },
-                url: paymentLink,
+                url: `${BASE_PAYMENT_URL}/${payment.id}`,
                 expiresAt: new Date(new Date().getTime() + 1000 * 60 * 60 * 1 / 4 * 1), // 7 days
                 status: "PENDING",
                 amount: data.total_amount,
@@ -94,12 +94,12 @@ export const createPayment = async (data: any) => {
         });
 
 
-
-
+        console.log("payment id", payment.id);
+        const link = `${BASE_PAYMENT_URL}?id=${payment.id}`;
         return {
             success: true,
             paymentId: payment.id,
-            BASE_PAYMENT_URL, // Todo: change to actual link
+            link, // Todo: change to actual link
             clientSecret,
         };
     } catch (error) {
@@ -124,11 +124,13 @@ export const getPayment = async (id: string) => {
     if (!id) {
         throw new Error("Missing required parameters.");
     }
+    console.log("id", id);
 
-    const payment = await Prisma.payment.findUnique({
+    const payment = await Prisma.payment.findFirst({
         where: { id },
     });
 
+    console.log("payment", payment);
     if (!payment) {
         throw new Error("Payment not found");
     }
@@ -156,7 +158,7 @@ export const updatePayment = async (id: string, data: any) => {
             id: id,
         },
         data: {
-            ...data,
+            status: data.status,
         },
         include: {
             refunds: true,
