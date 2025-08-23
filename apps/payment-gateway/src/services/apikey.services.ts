@@ -2,73 +2,85 @@
 import prisma from "@payment_gateway/db";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
+import { generateAPIKey } from "../utils/utils";
+import { success } from "zod";
 
 interface getData {
 
     name: string;
     live_mode: boolean;
     user: {
-        userid: string;
+        id: string;
         email: string;
-        iat: number;
-        exp: number
+
     }
 }
 
 
 export const createApiKey = async (data: getData) => {
-    console.log("data", data.user);
+    const user = data.user;
 
-    // const merchant = await prisma.merchant.findFirst({
-    //     where: { id: data.user.userid },
-    // });
+    // create a api key
+    const prefix = data.name.toLowerCase().replace(/\s+/g, '');
 
-    // if (!merchant) {
-    //     throw new Error("Merchant not found.");
-    // }
-
-    // const rawKey = `sk_${data.user.userid}_${crypto.randomBytes(32).toString('hex')}`;
-    // const keyHash = await bcrypt.hash(rawKey, 10);
+    const { raw: key, hash: key_hash } = generateAPIKey(32, user.id, prefix);
 
 
-    // const apiKeyRecord = await prisma.apiKey.create({
-    //     data: {
-    //         name: data.name,
-    //         live_mode: true,
-    //         merchantId: data.user.userid,
-    //         key_hash: keyHash,
-    //     },
-    // });
+    const apiData = await prisma.apiKey.create({
+        data: {
+            merchant_id: Number(user.id),
+            name: data.name,
+            key_hash: key_hash,
+            key_prefix: prefix,
+            permissions: ["read_payments", "create_payments", "webhooks"],
+        },
+        select: {
+            id: true,
+            merchant_id: true,
+            name: true,
+            key_prefix: true,
+        }
+    })
 
-    // // Return a new object, removing key_hash and adding raw key for user
-    // return {
-    //     id: apiKeyRecord.id,
-    //     name: apiKeyRecord.name,
-    //     live_mode: apiKeyRecord.live_mode,
-    //     merchantId: apiKeyRecord.merchantId,
-    //     created_at: apiKeyRecord.created_at,
-    //     updated_at: apiKeyRecord.updated_at,
-    //     key: rawKey,  // actual API key user receives
-    // };
 
-    return { message: "not implemented" }
+
+
+
+    return { api: { key, ...apiData, id: apiData.id.toString(), merchant_id: apiData.merchant_id.toString() }, message: "API key created successfully" }
 };
 
 
 export const deleteApiKey = async (id: string) => {
 
-    // if (!id) {
-    //     return new Error("Missing required parameters.");
-    // }
+    const api = await prisma.apiKey.findFirst({
+        where: { id: Number(id) },
+    })
 
-    // const apiKey = await prisma.apiKey.delete({
-    //     where: {
-    //         id: id,
-    //     }
-    // });
+    if (!api) {
+        throw new Error("API key not found");
+    }
 
-    // return apiKey;
+    await prisma.apiKey.delete({
+        where: { id: Number(id) }
+    })
 
-    return { message: "not implemented" }
-
+    return { message: "API key deleted successfully" }
 }
+
+
+export const getApiKey = async (id: string) => {
+    const api = await prisma.apiKey.findFirst({
+        where: { id: Number(id) },
+        select: {
+            id: true,
+            key_prefix: true,
+            name: true,
+        },
+    });
+
+    if (!api) {
+        throw new Error("API key not found");
+    }
+
+    return { ...api, id: api.id.toString() };
+};

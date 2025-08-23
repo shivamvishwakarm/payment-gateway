@@ -2,10 +2,11 @@
 import * as apiService from "../services/apikey.services";
 
 
-export const get_api_keys = async (req: any, res: any) => {
+export const createAPIKey = async (req: any, res: any) => {
     try {
-        const apiKey = await apiService.createApiKey(req.body)
-        return res.status(200).json({ success: true, apiKey });
+
+        const data = await apiService.createApiKey({ ...req.body, user: req.user })
+        return res.status(200).json({ success: true, ...data });
     } catch (error: any) {
         res.status(400).json({ success: false, message: error.message });
         return;
@@ -13,11 +14,23 @@ export const get_api_keys = async (req: any, res: any) => {
 }
 
 
-export const delete_api_key = async (req: any, res: any) => {
+export const deleteApiKey = async (req: any, res: any) => {
     try {
         const { id } = req.params;
-        const apiKey = await apiService.deleteApiKey(id)
+        await apiService.deleteApiKey(id)
         res.status(200).json({ success: true });
+    } catch (error: any) {
+        res.status(400).json({ success: false, message: error.message });
+        return;
+    }
+}
+
+
+export const getApiKey = async (req: any, res: any) => {
+    try {
+        const { id } = req.params;
+        const apiData = await apiService.getApiKey(id)
+        res.status(200).json({ success: true, data: apiData });
     } catch (error: any) {
         res.status(400).json({ success: false, message: error.message });
         return;

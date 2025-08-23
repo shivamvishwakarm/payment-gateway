@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import prisma from "@payment_gateway/db";
-import bcrypt from "bcrypt";
+import jwt, { JwtPayload } from "jsonwebtoken";
+
 
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
@@ -13,7 +12,9 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-        req.body = { ...req.body, user: decoded }; // Attach user info
+        const { userid, email } = decoded as JwtPayload;
+        (req as any).user = { id: userid, email: email };
+
         next();
     } catch (err) {
         return res.status(401).json({ success: false, message: "Unauthorized: Invalid token" });
