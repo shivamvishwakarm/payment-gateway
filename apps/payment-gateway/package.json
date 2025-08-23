@@ -25,7 +25,8 @@
     "nanoid": "^5.1.5",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

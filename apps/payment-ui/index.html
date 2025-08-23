@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,6 +32,7 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body class="bg-gray-50 min-h-screen">
     <main>
         <!-- Header -->
@@ -54,14 +56,15 @@
         <!-- Main Content -->
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
+
                 <!-- Payment Form -->
                 <div class="lg:col-span-2">
                     <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                         <!-- Form Header -->
                         <div class="bg-gradient-to-r from-primary to-primary-dark p-6 text-white">
                             <h2 class="text-2xl font-bold mb-2" data-editable="true">Complete Your Payment</h2>
-                            <p class="opacity-90" data-editable="true">Your payment information is encrypted and secure</p>
+                            <p class="opacity-90" data-editable="true">Your payment information is encrypted and secure
+                            </p>
                         </div>
 
                         <!-- Form Body -->
@@ -71,17 +74,11 @@
                                 <div class="bg-gray-50 rounded-lg p-4 border">
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Payment Amount</label>
                                     <div class="relative">
-                                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">₹</span>
-                                        <input 
-                                            type="number" 
-                                            id="amount" 
-                                            name="amount"
+                                        <span
+                                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">₹</span>
+                                        <input disabled type="number" id="amount" name="amount"
                                             class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-lg font-semibold"
-                                            placeholder="0.00"
-                                            min="1"
-                                            step="0.01"
-                                            required
-                                        >
+                                            placeholder="0.00" min="1" step="0.01" required>
                                     </div>
                                 </div>
 
@@ -91,21 +88,16 @@
                                         <i class="fas fa-credit-card mr-2 text-primary"></i>
                                         Card Information
                                     </h3>
-                                    
+
                                     <!-- Card Number -->
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Card Number</label>
                                         <div class="relative">
-                                            <input 
-                                                type="text" 
-                                                id="cardNumber" 
-                                                name="cardNumber"
+                                            <input type="text" id="cardNumber" name="cardNumber"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                                placeholder="1234 5678 9012 3456"
-                                                maxlength="19"
-                                                required
-                                            >
-                                            <div id="cardType" class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                                placeholder="1234 5678 9012 3456" maxlength="19" required>
+                                            <div id="cardType"
+                                                class="absolute right-3 top-1/2 transform -translate-y-1/2">
                                                 <!-- Card type icon will be displayed here -->
                                             </div>
                                         </div>
@@ -114,31 +106,21 @@
                                     <!-- Expiry and CVV -->
                                     <div class="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
-                                            <input 
-                                                type="text" 
-                                                id="expiryDate" 
-                                                name="expiryDate"
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Expiry
+                                                Date</label>
+                                            <input type="text" id="expiryDate" name="expiryDate"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                                placeholder="MM/YY"
-                                                maxlength="5"
-                                                required
-                                            >
+                                                placeholder="MM/YY" maxlength="5" required>
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">CVV</label>
                                             <div class="relative">
-                                                <input 
-                                                    type="text" 
-                                                    id="cvv" 
-                                                    name="cvv"
+                                                <input type="text" id="cvv" name="cvv"
                                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                                    placeholder="123"
-                                                    maxlength="4"
-                                                    required
-                                                >
+                                                    placeholder="123" maxlength="4" required>
                                                 <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                                    <i class="fas fa-question-circle text-gray-400 cursor-help" title="3-4 digit security code on the back of your card"></i>
+                                                    <i class="fas fa-question-circle text-gray-400 cursor-help"
+                                                        title="3-4 digit security code on the back of your card"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -146,15 +128,11 @@
 
                                     <!-- Cardholder Name -->
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Cardholder Name</label>
-                                        <input 
-                                            type="text" 
-                                            id="cardholderName" 
-                                            name="cardholderName"
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Cardholder
+                                            Name</label>
+                                        <input type="text" id="cardholderName" name="cardholderName"
                                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                            placeholder="John Doe"
-                                            required
-                                        >
+                                            placeholder="John Doe" required>
                                     </div>
                                 </div>
 
@@ -164,78 +142,47 @@
                                         <i class="fas fa-map-marker-alt mr-2 text-primary"></i>
                                         Billing Information
                                     </h3>
-                                    
+
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                            <input 
-                                                type="email" 
-                                                id="email" 
-                                                name="email"
+                                            <input type="email" id="email" name="email"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                                placeholder="john@example.com"
-                                                required
-                                            >
+                                                placeholder="john@example.com" required>
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-                                            <input 
-                                                type="tel" 
-                                                id="phone" 
-                                                name="phone"
+                                            <input type="tel" id="phone" name="phone"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                                placeholder="+91 98765 43210"
-                                                required
-                                            >
+                                                placeholder="+91 98765 43210" required>
                                         </div>
                                     </div>
 
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
-                                        <input 
-                                            type="text" 
-                                            id="address" 
-                                            name="address"
+                                        <input type="text" id="address" name="address"
                                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                            placeholder="123 Main Street"
-                                            required
-                                        >
+                                            placeholder="123 Main Street" required>
                                     </div>
 
                                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">City</label>
-                                            <input 
-                                                type="text" 
-                                                id="city" 
-                                                name="city"
+                                            <input type="text" id="city" name="city"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                                placeholder="Mumbai"
-                                                required
-                                            >
+                                                placeholder="Mumbai" required>
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">State</label>
-                                            <input 
-                                                type="text" 
-                                                id="state" 
-                                                name="state"
+                                            <input type="text" id="state" name="state"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                                placeholder="Maharashtra"
-                                                required
-                                            >
+                                                placeholder="Maharashtra" required>
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">PIN Code</label>
-                                            <input 
-                                                type="text" 
-                                                id="pincode" 
-                                                name="pincode"
+                                            <input type="text" id="pincode" name="pincode"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                                placeholder="400001"
-                                                maxlength="6"
-                                                required
-                                            >
+                                                placeholder="400001" maxlength="6" required>
                                         </div>
                                     </div>
                                 </div>
@@ -243,23 +190,18 @@
                                 <!-- Terms and Submit -->
                                 <div class="space-y-4">
                                     <div class="flex items-start space-x-3">
-                                        <input 
-                                            type="checkbox" 
-                                            id="terms" 
-                                            name="terms"
+                                        <input type="checkbox" id="terms" name="terms"
                                             class="mt-1 w-4 h-4 text-primary focus:ring-primary border-gray-300 rounded"
-                                            required
-                                        >
+                                            required>
                                         <label for="terms" class="text-sm text-gray-600">
-                                            I agree to the <a href="#" class="text-primary hover:underline">Terms of Service</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a>
+                                            I agree to the <a href="#" class="text-primary hover:underline">Terms of
+                                                Service</a> and <a href="#" class="text-primary hover:underline">Privacy
+                                                Policy</a>
                                         </label>
                                     </div>
 
-                                    <button 
-                                        type="submit" 
-                                        id="submitBtn"
-                                        class="w-full bg-gradient-to-r from-primary to-primary-dark text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-primary-dark hover:to-primary transform hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary/25"
-                                    >
+                                    <button type="submit" id="submitBtn"
+                                        class="w-full bg-gradient-to-r from-primary to-primary-dark text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-primary-dark hover:to-primary transform hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary/25">
                                         <span id="submitText">
                                             <i class="fas fa-lock mr-2"></i>
                                             Pay Securely
@@ -279,7 +221,7 @@
                 <div class="lg:col-span-1">
                     <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 sticky top-8">
                         <h3 class="text-xl font-bold text-gray-900 mb-4" data-editable="true">Order Summary</h3>
-                        
+
                         <div class="space-y-3 mb-6">
                             <div class="flex justify-between text-gray-600">
                                 <span>Subtotal</span>
@@ -317,7 +259,8 @@
 
                         <div class="mt-6 pt-6 border-t border-gray-200">
                             <p class="text-xs text-gray-500 text-center" data-editable="true">
-                                We accept all major credit cards and process payments securely using industry-standard encryption.
+                                We accept all major credit cards and process payments securely using industry-standard
+                                encryption.
                             </p>
                             <div class="flex justify-center mt-3 space-x-2">
                                 <i class="fab fa-cc-visa text-2xl text-blue-600"></i>
@@ -348,4 +291,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

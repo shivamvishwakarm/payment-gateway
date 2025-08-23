@@ -7,12 +7,25 @@ class PaymentGateway {
         this.expiryDateInput = document.getElementById('expiryDate');
         this.cvvInput = document.getElementById('cvv');
         this.submitBtn = document.getElementById('submitBtn');
-        
+        const urlParams = new URLSearchParams(window.location.search);
+        this.id = urlParams.get('id');
         this.init();
     }
 
-    init() {
+    async init() {
         this.setupEventListeners();
+        this.updateOrderSummary();
+
+        // get id from url
+
+
+
+        var response = await fetch(`http://localhost:3000/payments/${this.id}`);
+        response = await response.json();
+        console.log(response.payment);
+
+        const { totalAmount } = response.payment;
+        this.amountInput.value = totalAmount;
         this.updateOrderSummary();
     }
 
@@ -55,21 +68,21 @@ class PaymentGateway {
     formatCardNumber(e) {
         let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
         let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
-        
+
         if (formattedValue.length > 19) {
             formattedValue = formattedValue.substr(0, 19);
         }
-        
+
         e.target.value = formattedValue;
     }
 
     detectCardType(cardNumber) {
         const cardType = document.getElementById('cardType');
         const cleanNumber = cardNumber.replace(/\s/g, '');
-        
+
         let type = '';
         let icon = '';
-        
+
         if (/^4/.test(cleanNumber)) {
             type = 'visa';
             icon = '<i class="fab fa-cc-visa text-2xl text-blue-600"></i>';
@@ -83,17 +96,17 @@ class PaymentGateway {
             type = 'discover';
             icon = '<i class="fab fa-cc-discover text-2xl text-orange-500"></i>';
         }
-        
+
         cardType.innerHTML = icon;
     }
 
     formatExpiryDate(e) {
         let value = e.target.value.replace(/\D/g, '');
-        
+
         if (value.length >= 2) {
             value = value.substring(0, 2) + '/' + value.substring(2, 4);
         }
-        
+
         e.target.value = value;
     }
 
@@ -150,47 +163,47 @@ class PaymentGateway {
         // Luhn algorithm
         let sum = 0;
         let shouldDouble = false;
-        
+
         for (let i = cardNumber.length - 1; i >= 0; i--) {
             let digit = parseInt(cardNumber.charAt(i));
-            
+
             if (shouldDouble) {
                 digit *= 2;
                 if (digit > 9) {
                     digit -= 9;
                 }
             }
-            
+
             sum += digit;
             shouldDouble = !shouldDouble;
         }
-        
+
         return (sum % 10) === 0 && cardNumber.length >= 13;
     }
 
     validateExpiryDate(expiry) {
         if (!/^\d{2}\/\d{2}$/.test(expiry)) return false;
-        
+
         const [month, year] = expiry.split('/').map(num => parseInt(num));
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear() % 100;
         const currentMonth = currentDate.getMonth() + 1;
-        
+
         if (month < 1 || month > 12) return false;
         if (year < currentYear || (year === currentYear && month < currentMonth)) return false;
-        
+
         return true;
     }
 
     updateFieldValidation(field, isValid, errorMessage) {
         field.classList.remove('border-red-500', 'border-green-500');
-        
+
         // Remove existing error message
         const existingError = field.parentNode.querySelector('.error-message');
         if (existingError) {
             existingError.remove();
         }
-        
+
         if (!isValid && field.value.trim()) {
             field.classList.add('border-red-500');
             const errorDiv = document.createElement('div');
@@ -218,7 +231,7 @@ class PaymentGateway {
         // Validate all fields
         const fields = this.form.querySelectorAll('input[required]');
         let isFormValid = true;
-        
+
         fields.forEach(field => {
             if (!this.validateField(field)) {
                 isFormValid = false;
@@ -253,8 +266,20 @@ class PaymentGateway {
                 total: (parseFloat(this.amountInput.value) + parseFloat(this.amountInput.value) * 0.029 + (parseFloat(this.amountInput.value) + parseFloat(this.amountInput.value) * 0.029) * 0.18).toFixed(2)
             };
 
-            // Simulate payment processing delay
-            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // send post request to server 
+            try {
+                const response = await fetch(`http://localhost:3000/payments/${this.id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+            } catch (e) {
+                alert(e);
+            }
+
 
             // Submit to server using window.form
             if (typeof window.form !== 'undefined') {
@@ -262,12 +287,12 @@ class PaymentGateway {
             }
 
             this.showToast('success', 'Payment Successful!', `Payment of ₹${formData.total} has been processed successfully.`);
-            
+
             // Reset form after successful payment
-            setTimeout(() => {
-                this.form.reset();
-                this.updateOrderSummary();
-            }, 3000);
+            // setTimeout(() => {
+            //     this.form.reset();
+            //     this.updateOrderSummary();
+            // }, 3000);
 
         } catch (error) {
             console.error('Payment error:', error);
@@ -280,7 +305,7 @@ class PaymentGateway {
     setLoadingState(loading) {
         const submitText = document.getElementById('submitText');
         const loadingText = document.getElementById('loadingText');
-        
+
         if (loading) {
             submitText.classList.add('hidden');
             loadingText.classList.remove('hidden');
@@ -303,7 +328,7 @@ class PaymentGateway {
         // Set icon based on type
         let iconHTML = '';
         let bgColor = '';
-        
+
         switch (type) {
             case 'success':
                 iconHTML = '<i class="fas fa-check-circle text-green-500 text-xl"></i>';
@@ -325,7 +350,7 @@ class PaymentGateway {
         toastIcon.innerHTML = iconHTML;
         toastTitle.textContent = title;
         toastMessage.textContent = message;
-        
+
         // Add background color
         toast.firstElementChild.className = toast.firstElementChild.className.replace(/bg-\w+-\d+\s+border-\w+-\d+/, bgColor);
 
@@ -388,7 +413,7 @@ function fillDemoCard() {
     document.getElementById('expiryDate').value = '12/25';
     document.getElementById('cvv').value = '123';
     document.getElementById('cardholderName').value = 'John Doe';
-    
+
     // Trigger events for validation
     document.getElementById('cardNumber').dispatchEvent(new Event('input'));
     document.getElementById('expiryDate').dispatchEvent(new Event('input'));

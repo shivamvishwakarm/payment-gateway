@@ -5,8 +5,6 @@ import paymentRouter from "./routes/api/payment.routes";
 import 'dotenv/config'
 import express = require('express');
 import cookieParser from "cookie-parser";
-import { verifyAccessToken } from "./utils/jwt";
-import { logger } from "./utils/logger";
 import { authenticate } from "./middlewares/auth.middleware";
 import cors from "cors";
 
@@ -25,20 +23,22 @@ app.use(cors());
 app.use(cors({
     origin: "http://127.0.0.1:5500",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["POST"],
 }));
 
 
 app.use("/auth", authRouter);
 app.use("/api-keys", authenticate, apiKeyRouter);
-app.use("/payments", paymentRouter);  // Todo: add api-key middleware 
+app.use("/payments", paymentRouter);
+
 
 
 
 /**
  * Root endpoint - Health check
- */
-app.get('/', (req: Request, res: Response) => {
+*/
+
+app.head('/', (req: Request, res: Response) => {
     res.send('Payment Gateway API is running.');
 });
 

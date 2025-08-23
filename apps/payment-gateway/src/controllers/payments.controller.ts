@@ -35,6 +35,13 @@ export const updatePayment = async (req: any, res: any) => {
 
 
         // Todo: Ideally should call acquiring bank for completing the forward money transfer.
+        /**
+         * if the acquiring bank is giving status code 200 \
+         * then we'll call the user webhook and\
+         *  update the status complete to the Db.
+         */
+
+        // for not we are mocking the things
         const status = "COMPLETED";
 
         const payment = await paymentService.updatePayment(req.params.id, { status });
